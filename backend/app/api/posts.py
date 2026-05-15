@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from app.core.database import get_db
 from app.models.models import Post, PostType, UserRole
@@ -10,7 +10,7 @@ from app.services.permission import get_current_user, check_admin
 router = APIRouter(prefix="/posts", tags=["posts"])
 
 @router.get("/", response_model=List[PostOut])
-def get_posts(type: PostType = None, db: Session = Depends(get_db)):
+def get_posts(type: Optional[PostType] = None, db: Session = Depends(get_db)):
     query = db.query(Post)
     if type:
         query = query.filter(Post.type == type)

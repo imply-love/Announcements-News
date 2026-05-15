@@ -37,8 +37,12 @@ const handleLogin = async () => {
       password: form.value.password
     });
     
+    const token = res.data.access_token;
+    console.log('Login response token:', token);
+    localStorage.setItem('token', token);
+    console.log('Token saved to localStorage');
     const userRes = await api.get('/auth/me');
-    userStore.setUserInfo(userRes.data, res.data.access_token);
+    userStore.setUserInfo(userRes.data, token);
     ElMessage.success('登录成功');
     router.push('/');
   } catch (e) {

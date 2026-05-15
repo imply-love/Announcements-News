@@ -1,25 +1,16 @@
--- --------------------------------------------------------------
--- 1️⃣ 数据库 & 编码
--- --------------------------------------------------------------
 CREATE DATABASE IF NOT EXISTS campus_notice
   CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+  COLLATE utf8mb4_0900_ai_ci;
 USE campus_notice;
 
--- --------------------------------------------------------------
--- 2️⃣ users 表
--- --------------------------------------------------------------
 CREATE TABLE users (
     id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     username      VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role          ENUM('admin','user') NOT NULL DEFAULT 'user',
     created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------------
--- 3️⃣ posts 表
--- --------------------------------------------------------------
 CREATE TABLE posts (
     id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     user_id      INT UNSIGNED NOT NULL,
@@ -32,11 +23,8 @@ CREATE TABLE posts (
         ON UPDATE CASCADE ON DELETE RESTRICT,
     INDEX idx_posts_type (type),
     INDEX idx_posts_created (created_at)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------------
--- 4️⃣ comments 表
--- --------------------------------------------------------------
 CREATE TABLE comments (
     id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     post_id      INT UNSIGNED NOT NULL,
@@ -54,11 +42,8 @@ CREATE TABLE comments (
         ON UPDATE CASCADE ON DELETE SET NULL,
     INDEX idx_comments_post (post_id),
     INDEX idx_comments_created (created_at)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------------
--- 5️⃣ tools 表
--- --------------------------------------------------------------
 CREATE TABLE tools (
     id           INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     name         VARCHAR(100) NOT NULL,
@@ -69,11 +54,8 @@ CREATE TABLE tools (
     CONSTRAINT fk_tools_uploader FOREIGN KEY (uploader_id) REFERENCES users(id)
         ON UPDATE CASCADE ON DELETE RESTRICT,
     UNIQUE INDEX uniq_tools_name (name)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- --------------------------------------------------------------
--- 6️⃣ 初始数据（可选，仅用于本地调试）
--- --------------------------------------------------------------
 INSERT INTO users (username, password_hash, role)
 VALUES 
 ('admin',   SHA2('admin123', 256), 'admin'),

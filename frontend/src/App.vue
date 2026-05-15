@@ -8,7 +8,7 @@
         <router-link to="/tools">工具栏</router-link>
       </nav>
       <div class="user-info">
-        <span v-if="userStore.isLoggedIn">你好, {{ userStore.user.username }}</span>
+        <span v-if="userStore.isLoggedIn && userStore.user">你好, {{ userStore.user.username }}</span>
         <router-link v-else to="/login">登录</router-link>
         <el-button v-if="userStore.isLoggedIn" size="small" @click="handleLogout">退出</el-button>
       </div>

@@ -15,14 +15,18 @@
         <div class="comment-section">
           <el-alert v-if="!userStore.isLoggedIn" title="请登录后查看和回复评论" type="info" show-icon :closable="false" />
           <div v-else>
-            <div v-for="comment in post.comments" :key="comment.id" class="comment-item">
-              <span class="comment-user">{{ comment.is_anonymous ? '匿名用户' : '用户' }}:</span>
-              <span class="comment-text">{{ comment.content }}</span>
-            </div>
-            <div class="reply-box">
-              <el-input v-model="newComment" placeholder="写回复..." @keyup.enter="submitComment(post.id)"></el-input>
-              <el-button size="small" type="primary" @click="submitComment(post.id)">回复</el-button>
-            </div>
+<div v-for="comment in post.comments" :key="comment.id" class="comment-item">
+               <div class="comment-main">
+                 <span class="comment-user">{{ comment.is_anonymous ? '匿名用户' : comment.username }}:</span>
+                 <span class="comment-text">{{ comment.content }}</span>
+               </div>
+               <el-button v-if="userStore.isLoggedIn && (userStore.isAdmin || comment.user_id === userStore.user?.id)" 
+                         type="text" size="small" class="delete-comment-btn" @click="deleteComment(post.id, comment.id)">删除</el-button>
+             </div>
+             <div class="reply-box">
+               <el-input v-model="post.newComment" placeholder="写回复..." @keyup.enter="submitComment(post)"></el-input>
+               <el-button size="small" type="primary" @click="submitComment(post)">回复</el-button>
+             </div>
           </div>
         </div>
       </el-card>
@@ -48,16 +52,25 @@ const userStore = useUserStore();
 const posts = ref([]);
 const showPostDialog = ref(false);
 const postContent = ref('');
-const newComment = ref('');
 
 const fetchPosts = async () => {
   try {
     const res = await api.get('/posts?type=announcement');
-    // 后端返回的数据包含 comments 关系，需要手动处理
-    posts.value = res.data.map(post => ({
+    const data = res.data.map(post => ({
       ...post,
-      comments: []  // 暂时不加载评论，或后续添加评论 API
+      comments: [],
+      newComment: ''
     }));
+    posts.value = data;
+    
+    for (let post of posts.value) {
+      try {
+        const commentsRes = await api.get(`/comments/${post.id}`);
+        post.comments = commentsRes.data;
+      } catch (e) {
+        console.error(`加载帖子 ${post.id} 评论失败`);
+      }
+    }
   } catch (e) {
     ElMessage.error('加载公告失败');
   }
@@ -76,13 +89,14 @@ const submitPost = async () => {
   }
 };
 
-const submitComment = async (postId) => {
-  if (!newComment.value) return;
+const submitComment = async (post) => {
+  if (!post.newComment) return;
   try {
-    await api.post('/comments', { content: newComment.value, post_id: postId, is_anonymous: false });
+    await api.post('/comments', { content: post.newComment, post_id: post.id, is_anonymous: false });
     ElMessage.success('回复成功');
-    newComment.value = '';
-    fetchPosts();
+    post.newComment = '';
+    const commentsRes = await api.get(`/comments/${post.id}`);
+    post.comments = commentsRes.data;
   } catch (e) {
     ElMessage.error('回复失败');
   }
@@ -98,6 +112,18 @@ const deletePost = async (id) => {
   }
 };
 
+const deleteComment = async (postId, commentId) => {
+  try {
+    await api.delete(`/comments/${commentId}`);
+    ElMessage.success('删除评论成功');
+    const commentsRes = await api.get(`/comments/${postId}`);
+    const post = posts.value.find(p => p.id === postId);
+    if (post) post.comments = commentsRes.data;
+  } catch (e) {
+    ElMessage.error('删除失败');
+  }
+};
+
 onMounted(fetchPosts);
 </script>
 
@@ -107,7 +133,21 @@ onMounted(fetchPosts);
 .post-card { margin-bottom: 20px; }
 .post-header { display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; font-weight: bold; }
 .comment-section { margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee; }
-.comment-item { margin-bottom: 8px; font-size: 0.9rem; }
+.comment-item { 
+  margin-bottom: 8px; 
+  font-size: 0.9rem; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.comment-main {
+  display: flex;
+  gap: 5px;
+}
 .comment-user { font-weight: bold; margin-right: 5px; }
+.delete-comment-btn {
+  font-size: 12px;
+  color: #F56C6C;
+}
 .reply-box { display: flex; gap: 10px; margin-top: 10px; }
 </style>

@@ -1,0 +1,82 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "校园公告"
+			}
+		},
+		{
+			"path": "pages/wall/index",
+			"style": {
+				"navigationBarTitleText": "校园墙"
+			}
+		},
+		{
+			"path": "pages/tools/index",
+			"style": {
+				"navigationBarTitleText": "工具箱"
+			}
+		},
+		{
+			"path": "pages/profile/index",
+			"style": {
+				"navigationBarTitleText": "个人中心"
+			}
+		},
+		{
+			"path": "pages/auth/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "校园公告系统",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#F5F7FA"
+	},
+	"tabBar": {
+		"color": "#909399",
+		"selectedColor": "#409EFF",
+		"borderStyle": "black",
+		"backgroundColor": "#FFFFFF",
+		"list": [
+			{
+				"pagePath": "pages/index/index",
+				"text": "公告",
+				"iconPath": "static/home.png",
+				"selectedIconPath": "static/home-active.png"
+			},
+			{
+				"pagePath": "pages/wall/index",
+				"text": "校园墙",
+				"iconPath": "static/wall.png",
+				"selectedIconPath": "static/wall-active.png"
+			},
+			{
+				"pagePath": "pages/tools/index",
+				"text": "工具",
+				"iconPath": "static/tools.png",
+				"selectedIconPath": "static/tools-active.png"
+			},
+			{
+				"pagePath": "pages/profile/index",
+				"text": "我的",
+				"iconPath": "static/user.png",
+				"selectedIconPath": "static/user-active.png"
+			}
+		]
+	},
+	"condition" : { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "", //模式名称
+				"path": "", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			}
+		]
+	}
+}
