@@ -16,6 +16,13 @@ router.get('/', async (req, res) => {
 router.post('/', authenticate, async (req, res) => {
   const { content, type, is_anonymous } = req.body;
   const userId = req.user.id;
+  const userRole = req.user.role;
+
+  // 权限校验：如果是公告类型 (announcement)，必须是 admin 才能发布
+  if (type === 'announcement' && userRole !== 'admin') {
+    return res.status(403).json({ error: 'Forbidden: Only admins can publish announcements' });
+  }
+
   try {
     const [result] = await pool.query(
       'INSERT INTO posts (user_id, content, type, is_anonymous) VALUES (?, ?, ?, ?)',
