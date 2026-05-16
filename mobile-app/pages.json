@@ -46,26 +46,26 @@
 			{
 				"pagePath": "pages/index/index",
 				"text": "公告",
-				"iconPath": "static/home.png",
-				"selectedIconPath": "static/home-active.png"
+				"iconPath": "/static/logo/announcement.png",
+				"selectedIconPath": "static/logo/公告.png"
 			},
 			{
 				"pagePath": "pages/wall/index",
 				"text": "校园墙",
-				"iconPath": "static/wall.png",
-				"selectedIconPath": "static/wall-active.png"
+				"iconPath": "/static/logo/Dynamic.png",
+				"selectedIconPath": "static/logo/动态.png"
 			},
 			{
 				"pagePath": "pages/tools/index",
 				"text": "工具",
-				"iconPath": "static/tools.png",
-				"selectedIconPath": "static/tools-active.png"
+				"iconPath": "/static/logo/tools.png",
+				"selectedIconPath": "static/logo/工具.png"
 			},
 			{
 				"pagePath": "pages/profile/index",
 				"text": "我的",
-				"iconPath": "static/user.png",
-				"selectedIconPath": "static/user-active.png"
+				"iconPath": "/static/logo/mine.png",
+				"selectedIconPath": "static/logo/我的.png"
 			}
 		]
 	},

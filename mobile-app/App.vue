@@ -6,7 +6,6 @@
 		version
 	} from './package.json'
 	// #ifdef APP
-	import checkUpdate from '@/uni_modules/uni-upgrade-center-app/utils/check-update';
 	// #endif
 
 	export default {
